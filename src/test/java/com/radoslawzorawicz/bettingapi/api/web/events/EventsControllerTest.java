@@ -95,7 +95,7 @@ class EventsControllerTest {
         return Stream.of(
                 Arguments.arguments(" ", RaceRetrievalError.QUERY_TOO_BROAD, 422),
                 Arguments.arguments("R", RaceRetrievalError.RATE_LIMITED, 429),
-                Arguments.arguments("R", RaceRetrievalError.INTERNAL_FAILURE, 502)
+                Arguments.arguments("R", RaceRetrievalError.INTERNAL_FAILURE, 500)
         );
     }
 
@@ -125,7 +125,7 @@ class EventsControllerTest {
         .when()
             .get("/events/{session_id}/drivers_market", "S1")
         .then()
-            .statusCode(502);
+            .statusCode(500);
     }
 
     @Test
@@ -149,7 +149,7 @@ class EventsControllerTest {
         return Stream.of(
                 Arguments.arguments(SettlementError.INVALID_REQUEST, 400),
                 Arguments.arguments(SettlementError.EVENT_ALREADY_FINISHED, 409),
-                Arguments.arguments(SettlementError.INTERNAL_ERROR, 502)
+                Arguments.arguments(SettlementError.INTERNAL_ERROR, 500)
         );
     }
 
