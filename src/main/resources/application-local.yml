@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/betting
+    username: ${POSTGRES_USER:betting}
+    password: ${POSTGRES_PASSWORD:betting}
+    driver-class-name: org.postgresql.Driver
+  jdbc:
+    template:
+      fetch-size: 500
+      max-rows: 0
