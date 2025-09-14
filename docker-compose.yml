@@ -1,7 +1,5 @@
-version: '3.9'
-
 services:
-  postgres:
+  betting-api-postgres:
     image: postgres:17
     container_name: betting-api-postgres
     environment:
@@ -17,6 +15,22 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  betting-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: betting-api
+    depends_on:
+      betting-api-postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_DATASOURCE_URL: jdbc:postgresql://betting-api-postgres:5432/betting
+      SPRING_DATASOURCE_USERNAME: betting
+      SPRING_DATASOURCE_PASSWORD: betting
+    ports:
+      - "8080:8080"
 
 volumes:
   pgdata:
