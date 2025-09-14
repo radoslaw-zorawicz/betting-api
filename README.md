@@ -5,20 +5,17 @@ Two ways to run locally:
 - **A. Containerized app + Postgres (Docker Compose)**
 - **B. Native app + Dockerized Postgres**
 
----
 
 ## Prerequisites
 - Java **24**
 - Maven Wrapper (`./mvnw`)
 - Docker & Docker Compose v2+
 
----
 
 ## Configuration
 The application runs with Spring profile **`local`** and uses the configuration from:
 `src/main/resources/application-local.yml`.
 
----
 
 ## A) Run containerized **app + db**
 From the project root (where `docker-compose.yml` is):
@@ -27,8 +24,6 @@ docker compose up -d --build
 docker compose logs -f betting-api   # optional: tail app logs
 curl http://localhost:8080/events    # quick check
 ```
-
----
 
 ## B) Run **native app** + **dockerized db**
 Start Postgres, then run the app with the `local` profile:
@@ -46,7 +41,6 @@ docker compose up -d betting-api-postgres
 curl http://localhost:8080/events
 ```
 
----
 
 ## Build & Test (locally)
 ```bash
@@ -54,9 +48,6 @@ curl http://localhost:8080/events
 java -jar target/*.jar --spring.profiles.active=local
 ```
 
----
-
-## Project decisions
 
 ## Project decisions
 
@@ -66,8 +57,8 @@ java -jar target/*.jar --spring.profiles.active=local
 - **Identifiers.** Event IDs are **strings** (keeps the API agnostic across providers); driver IDs are **integers** (assumed equal to the driver’s race number).
 - **Rate limiting.** The F1 API doesn’t publish limits, but code indicates roughly **30 requests / 10 seconds** for free users. The client has throttling to respect this.
 - **Database schema.** Managed by **Liquibase**; main changelog at `src/main/resources/db/changelog/db.changelog-master.sql`.
+- **Initial data.** The database is seeded with **5 user accounts (IDs 1–5)**, each with a balance of **100 EUR** (as per the instructions). More users can be added directly in the database.
 
----
 
 ## API
 
