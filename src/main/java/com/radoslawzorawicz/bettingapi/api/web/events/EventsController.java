@@ -62,7 +62,7 @@ class EventsController {
         final var httpStatus = switch (error) {
             case QUERY_TOO_BROAD -> HttpStatus.UNPROCESSABLE_ENTITY;
             case RATE_LIMITED -> HttpStatus.TOO_MANY_REQUESTS;
-            case INTERNAL_FAILURE -> HttpStatus.BAD_GATEWAY;
+            case INTERNAL_FAILURE -> HttpStatus.INTERNAL_SERVER_ERROR;
         };
         return ProblemDetail.forStatusAndDetail(httpStatus, error.name());
     }
@@ -71,7 +71,7 @@ class EventsController {
         final var httpStatus = switch (error) {
             case INVALID_REQUEST -> HttpStatus.BAD_REQUEST;
             case EVENT_ALREADY_FINISHED -> HttpStatus.CONFLICT;
-            case INTERNAL_ERROR -> HttpStatus.BAD_GATEWAY;
+            case INTERNAL_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
         };
         return ProblemDetail.forStatusAndDetail(httpStatus, error.name());
     }
