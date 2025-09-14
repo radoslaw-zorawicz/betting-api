@@ -14,7 +14,7 @@
 
 ## Coding Style & Naming Conventions
 - Java style: 4 spaces, no tabs; one class per file; avoid wildcard imports.
-- Packages: `com.radoslawzorawicz.battingapi`.
+- Packages: `com.radoslawzorawicz.bettingapi`.
 - Naming: Classes `PascalCase` (e.g., `BettingApplication`), methods/fields `camelCase`, constants `UPPER_SNAKE_CASE`.
 - Spring: prefer constructor injection (as in `EventRetriever`). Keep components cohesive and small.
 
@@ -198,6 +198,6 @@ Method ordering clarification: within each visibility group, list static methods
 - Organize imports in groups with a blank line between:
   - Java/Jakarta (`java.*`, `javax.*`, `jakarta.*`)
   - Third‑party libraries
-  - Project (`com.radoslawzorawicz.battingapi.*`)
+  - Project (`com.radoslawzorawicz.bettingapi.*`)
   Sort alphabetically within each group.
 - Production code: be conservative with static imports (prefer for constants). Tests: freely use static imports for fluent DSLs to enhance readability.

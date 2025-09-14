@@ -9,3 +9,17 @@ spring:
       connect-timeout: 2s
       read-timeout: 5s
       redirects: follow
+
+app:
+  openf1:
+    base-url: https://api.openf1.org/v1
+    rate:
+      limit-for-period: 30          # permits per window
+      limit-refresh-seconds: 10     # window length (sec)
+
+    retry:
+      max-attempts: 3               # 1 try + 2 retries
+      base-delay-ms: 500            # base backoff
+      multiplier: 2.0               # exponential factor
+      jitter-factor: 0.5            # ±50% jitter
+      max-delay-ms: 5000            # cap per attempt
