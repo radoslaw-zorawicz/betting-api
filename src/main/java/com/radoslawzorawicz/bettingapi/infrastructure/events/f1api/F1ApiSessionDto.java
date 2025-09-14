@@ -9,13 +9,13 @@ record F1ApiSessionDto(
         String sessionName,
         String sessionType,
         Integer year,
-        String country,
+        String countryName,
         OffsetDateTime dateStart,
         OffsetDateTime dateEnd
 ) {
     Event toEvent() {
         return new Event(
-                sessionKey, sessionName, sessionType, year, country, dateStart, dateEnd
+                sessionKey, sessionName, sessionType, year, countryName, dateStart, dateEnd
         );
     }
 }

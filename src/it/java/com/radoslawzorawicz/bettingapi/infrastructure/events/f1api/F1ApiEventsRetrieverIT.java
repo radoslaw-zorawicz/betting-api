@@ -72,7 +72,7 @@ class F1ApiEventsRetrieverIT {
                                     "sessionName": "Race 1",
                                     "sessionType": "R",
                                     "year": 2024,
-                                    "country": "UK",
+                                    "countryName": "UK",
                                     "dateStart": "%s",
                                     "dateEnd": "%s"
                                   }
@@ -121,7 +121,7 @@ class F1ApiEventsRetrieverIT {
                                     "sessionName": "Race 1",
                                     "sessionType": "Race",
                                     "year": 2024,
-                                    "country": "UK",
+                                    "countryName": "UK",
                                     "dateStart": "%s",
                                     "dateEnd": "%s"
                                   }
@@ -280,7 +280,7 @@ class F1ApiEventsRetrieverIT {
                                     "sessionName": "Race 1",
                                     "sessionType": "R",
                                     "year": 2024,
-                                    "country": "UK",
+                                    "countryName": "UK",
                                     "dateStart": "%s",
                                     "dateEnd": "%s"
                                   }
