@@ -116,9 +116,9 @@ curl -s -X POST http://localhost:8080/bets \
 Fetch events (optional filters).
 
 **Query params (snake_case, all optional)**
-- `year` — integer
-- `country` — string
-- `session_type` — string
+- `year` — The year the event takes place.
+- `country` — The full name of the country where the event takes place.
+- `session_type` — The type of the session (Practice, Qualifying, Race, ...).
 
 **Responses**
 - `200 OK`
