@@ -68,13 +68,13 @@ class F1ApiEventsRetriever implements RaceEventsReadRepository {
     }
 
     @Override
-    public Either<RaceRetrievalError, List<Event>> getEvents(Integer year, Integer meetingKey, String sessionType) {
+    public Either<RaceRetrievalError, List<Event>> getEvents(Integer year, String country, String sessionType) {
         final Supplier<List<F1ApiSessionDto>> getEvents = () -> this.restClient
                 .get()
                 .uri((UriBuilder builder) -> builder
                         .path("/sessions")
                         .queryParamIfPresent("year", ofNullable(year))
-                        .queryParamIfPresent("meeting_key", ofNullable(meetingKey))
+                        .queryParamIfPresent("country_name", ofNullable(country))
                         .queryParamIfPresent("session_type", ofNullable(sessionType).filter(StringUtils::isNotBlank))
                         .build()
                 )

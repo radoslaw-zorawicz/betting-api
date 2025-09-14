@@ -24,10 +24,10 @@ class EventsController {
     @GetMapping
     ResponseEntity<?> getEvents(
             @RequestParam(value = "year", required = false) Integer year,
-            @RequestParam(value = "meeting_key", required = false) Integer meetingKey,
+            @RequestParam(value = "country", required = false) String country,
             @RequestParam(value = "session_type", required = false) String sessionType
     ) {
-        return eventsService.getEvents(year, meetingKey, sessionType)
+        return eventsService.getEvents(year, country, sessionType)
                 .mapLeft(this::toHttpStatus)
                 .fold(
                         problemDetail -> ResponseEntity.status(problemDetail.getStatus()).body(problemDetail),

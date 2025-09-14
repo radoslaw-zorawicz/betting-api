@@ -117,7 +117,7 @@ Fetch events (optional filters).
 
 **Query params (snake_case, all optional)**
 - `year` — integer
-- `meeting_key` — integer
+- `country` — string
 - `session_type` — string
 
 **Responses**
@@ -126,7 +126,7 @@ Fetch events (optional filters).
 
 **Example**
 ```bash
-curl -s 'http://localhost:8080/events?year=2024&meeting_key=1234&session_type=Race'
+curl -s 'http://localhost:8080/events?year=2024&country=Belgium&session_type=Race'
 ```
 
 #### `GET /events/{session_id}/drivers_market`

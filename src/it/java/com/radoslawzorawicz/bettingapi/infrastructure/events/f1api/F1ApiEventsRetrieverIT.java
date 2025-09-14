@@ -11,16 +11,21 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.RestClient;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED;
 import static org.assertj.vavr.api.VavrAssertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.*;
 
 class F1ApiEventsRetrieverIT {
 
@@ -57,8 +62,6 @@ class F1ApiEventsRetrieverIT {
         // given
         final String now = "2024-01-01T00:00:00Z";
         f1ApiMock.stubFor(get(urlPathEqualTo("/sessions"))
-                .withQueryParam("session_type", equalTo("R"))
-                .withQueryParam("year", equalTo("2024"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -86,6 +89,56 @@ class F1ApiEventsRetrieverIT {
         ));
         verify(getRequestedFor(urlPathEqualTo("/sessions")).withQueryParam("session_type", equalTo("R")));
     }
+
+    private static Stream<Arguments> getEventsByFilterCase() {
+        return Stream.of(
+                arguments("country_name", "UK", "UK", null, null),
+                arguments("session_type", "Race", null, "Race", null),
+                arguments("year", "2024", null, null, 2024)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("getEventsByFilterCase")
+    void shouldFilterEventsByCountry(
+            String testedParamName,
+            String testedParamValue,
+            String givenCountry,
+            String givenSessionType,
+            Integer givenYear
+    ) {
+        // given
+        final String now = "2024-01-01T00:00:00Z";
+        f1ApiMock.stubFor(get(urlPathEqualTo("/sessions"))
+                .withQueryParam(testedParamName, equalTo(testedParamValue))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(("""
+                                [
+                                  {
+                                    "sessionKey": "S1",
+                                    "sessionName": "Race 1",
+                                    "sessionType": "Race",
+                                    "year": 2024,
+                                    "country": "UK",
+                                    "dateStart": "%s",
+                                    "dateEnd": "%s"
+                                  }
+                                ]
+                                """.formatted(now, now))
+                        )));
+
+        // when
+        final Either<RaceRetrievalError, List<Event>> result = retriever(1).getEvents(givenYear, givenCountry, givenSessionType);
+
+        // then
+        assertThat(result).containsOnRight(List.of(
+                new Event("S1", "Race 1", "Race", 2024, "UK", OffsetDateTime.parse(now), OffsetDateTime.parse(now))
+        ));
+        verify(getRequestedFor(urlPathEqualTo("/sessions")).withQueryParam(testedParamName, equalTo(testedParamValue)));
+    }
+
 
     @Test
     void shouldMap422ToQueryTooBroad() {
@@ -130,6 +183,7 @@ class F1ApiEventsRetrieverIT {
         assertThat(res).containsOnRight(List.of(new Driver(44, "Lewis", "Team")));
         verify(getRequestedFor(urlPathEqualTo("/drivers")).withQueryParam("driver_number", equalTo("44")));
     }
+
 
     @ParameterizedTest
     @EnumSource(value = HttpStatus.class, names = {"INTERNAL_SERVER_ERROR", "BAD_GATEWAY", "SERVICE_UNAVAILABLE", "GATEWAY_TIMEOUT"}, mode = EnumSource.Mode.INCLUDE)

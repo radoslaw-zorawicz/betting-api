@@ -59,14 +59,14 @@ class EventsControllerTest {
     void shouldReturnEventsWithAllParams() {
         // given
         final var now = OffsetDateTime.now();
-        given(eventsService.getEvents(2024, 5, "R")).willReturn(Either.right(List.of(
+        given(eventsService.getEvents(2024, "UK", "R")).willReturn(Either.right(List.of(
                 new Event("E2", "Race 2", "R", 2024, "UK", now, now.plusHours(2))
         )));
 
         // expect
         given()
             .queryParam("year", 2024)
-            .queryParam("meeting_key", 5)
+            .queryParam("country", "UK")
             .queryParam("session_type", "R")
         .when()
             .get("/events")
@@ -75,7 +75,7 @@ class EventsControllerTest {
             .body("$.size()", equalTo(1))
             .body("[0].eventId", equalTo("E2"));
 
-        then(eventsService).should().getEvents(2024, 5, "R");
+        then(eventsService).should().getEvents(2024, "UK", "R");
     }
 
     @ParameterizedTest

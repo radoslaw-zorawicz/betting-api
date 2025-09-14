@@ -17,8 +17,8 @@ public class EventsApplicationService {
     private final OddsPolicy oddsPolicy;
     private final DomainEventPublisher eventPublisher;
 
-    public Either<RaceRetrievalError, List<Event>> getEvents(Integer year, Integer meetingKey, String sessionType) {
-        return raceEventsReadRepository.getEvents(year, meetingKey, sessionType);
+    public Either<RaceRetrievalError, List<Event>> getEvents(Integer year, String country, String sessionType) {
+        return raceEventsReadRepository.getEvents(year, country, sessionType);
     }
 
     public Either<RaceRetrievalError, List<DriverMarket>> getDriversMarket(String sessionId) {
