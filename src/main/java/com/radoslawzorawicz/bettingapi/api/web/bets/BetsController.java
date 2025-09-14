@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,16 +36,17 @@ class BetsController {
                 .mapLeft(this::errorToHttpStatus)
                 .map(BetCreatedDto::new)
                 .fold(
-                        status -> ResponseEntity.status(status).build(),
+                        problemDetail -> ResponseEntity.status(problemDetail.getStatus()).body(problemDetail),
                         body -> ResponseEntity.status(HttpStatus.CREATED).body(body)
                 );
     }
 
-    private HttpStatus errorToHttpStatus(BetPlacementError error) {
-        return switch (error) {
+    private ProblemDetail errorToHttpStatus(BetPlacementError error) {
+        final var httpStatus = switch (error) {
             case ACCOUNT_NOT_FOUND, DRIVER_MARKET_NOT_FOUND -> HttpStatus.BAD_REQUEST;
             case INSUFFICIENT_FUNDS -> HttpStatus.PAYMENT_REQUIRED;
             case INTERNAL_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
         };
+        return ProblemDetail.forStatusAndDetail(httpStatus, error.name());
     }
 }
