@@ -4,14 +4,14 @@ import com.radoslawzorawicz.bettingapi.domain.shared.Money;
 import lombok.AccessLevel;
 import lombok.With;
 
-@With(AccessLevel.PRIVATE)
+
 public record Bet(
-        Integer id,
+        @With Integer id,
         String eventId,
         Integer driverId,
         Integer userId,
         Money amount,
-        BetStatus status,
+        @With(AccessLevel.PRIVATE) BetStatus status,
         Integer odds
 ) {
     public Bet resolveByDriverId(Integer winningDriverId) {
