@@ -1,0 +1,9 @@
+# betting-api/.dockerignore
+
+target
+.git
+.gitignore
+.idea
+*.iml
+.mvn/wrapper/maven-wrapper.jar
+.DS_Store
