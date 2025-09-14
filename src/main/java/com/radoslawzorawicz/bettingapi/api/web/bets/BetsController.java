@@ -2,6 +2,7 @@ package com.radoslawzorawicz.bettingapi.api.web.bets;
 
 import com.radoslawzorawicz.bettingapi.application.bets.BetsApplicationService;
 import com.radoslawzorawicz.bettingapi.domain.bets.BetPlacementError;
+import com.radoslawzorawicz.bettingapi.domain.bets.PlaceBetCommand;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,8 @@ class BetsController {
             @RequestHeader("X-USER-ID") Integer userId,
             @Valid @RequestBody PlaceBetRequest request
     ) {
-        return betsService.placeBet(userId, request)
+        final var placeBetCommand = new PlaceBetCommand(request.eventId(), request.driverId(), request.betAmount());
+        return betsService.placeBet(userId, placeBetCommand)
                 .mapLeft(this::errorToHttpStatus)
                 .map(BetCreatedDto::new)
                 .fold(

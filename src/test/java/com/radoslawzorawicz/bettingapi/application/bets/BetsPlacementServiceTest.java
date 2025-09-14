@@ -1,12 +1,12 @@
 package com.radoslawzorawicz.bettingapi.application.bets;
 
-import com.radoslawzorawicz.bettingapi.api.web.bets.PlaceBetRequest;
 import com.radoslawzorawicz.bettingapi.application.events.EventsApplicationService;
 import com.radoslawzorawicz.bettingapi.domain.accounts.Account;
 import com.radoslawzorawicz.bettingapi.domain.accounts.AccountRepository;
 import com.radoslawzorawicz.bettingapi.domain.bets.Bet;
 import com.radoslawzorawicz.bettingapi.domain.bets.BetPlacementError;
 import com.radoslawzorawicz.bettingapi.domain.bets.BetRepository;
+import com.radoslawzorawicz.bettingapi.domain.bets.PlaceBetCommand;
 import com.radoslawzorawicz.bettingapi.domain.events.model.Driver;
 import com.radoslawzorawicz.bettingapi.domain.events.model.DriverMarket;
 import com.radoslawzorawicz.bettingapi.domain.events.model.RaceRetrievalError;
@@ -14,7 +14,6 @@ import com.radoslawzorawicz.bettingapi.domain.shared.Money;
 import io.vavr.control.Either;
 import io.vavr.control.Option;
 import org.assertj.vavr.api.VavrAssertions;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,7 +54,7 @@ class BetsPlacementServiceTest {
     void shouldPlaceBetAndDebitAccount() {
         // given
         final var userId = 7;
-        final var request = new PlaceBetRequest("EVT", 44, new BigDecimal("10.00"));
+        final var request = new PlaceBetCommand("EVT", 44, new BigDecimal("10.00"));
 
         final var driver = new Driver(44, "N", "T");
         final var driverMarket = new DriverMarket(driver, 3);
@@ -79,7 +78,7 @@ class BetsPlacementServiceTest {
     void shouldFailWhenInsufficientFunds() {
         // given
         final var userId = 7;
-        final var request = new PlaceBetRequest("EVT", 44, new BigDecimal("10.00"));
+        final var request = new PlaceBetCommand("EVT", 44, new BigDecimal("10.00"));
 
         final var driver = new Driver(44, "N", "T");
         final var driverMarket = new DriverMarket(driver, 2);
@@ -101,7 +100,7 @@ class BetsPlacementServiceTest {
     void shouldReturnAccountNotFoundWhenMissing() {
         // given
         final var userId = 77;
-        final var request = new PlaceBetRequest("EVT", 16, new BigDecimal("5.00"));
+        final var request = new PlaceBetCommand("EVT", 16, new BigDecimal("5.00"));
 
         final var driver = new Driver(16, "N", "T");
         final var driverMarket = new DriverMarket(driver, 2);
@@ -120,7 +119,7 @@ class BetsPlacementServiceTest {
     void shouldReturnDriverMarketNotFoundWhenEmpty() {
         // given
         final var userId = 7;
-        final var request = new PlaceBetRequest("EVT", 44, new BigDecimal("10.00"));
+        final var request = new PlaceBetCommand("EVT", 44, new BigDecimal("10.00"));
 
         given(events.getDriverMarket("EVT", 44)).willReturn(Either.right(List.of()));
 
@@ -136,7 +135,7 @@ class BetsPlacementServiceTest {
     void shouldMapInternalErrorWhenDriverMarketFails() {
         // given
         final var userId = 7;
-        final var request = new PlaceBetRequest("EVT", 99, new BigDecimal("10.00"));
+        final var request = new PlaceBetCommand("EVT", 99, new BigDecimal("10.00"));
 
         given(events.getDriverMarket("EVT", 99)).willReturn(Either.left(RaceRetrievalError.INTERNAL_FAILURE));
 
@@ -152,7 +151,7 @@ class BetsPlacementServiceTest {
     void shouldUseFirstDriverMarketEntryWhenMultipleReturned() {
         // given
         final int userId = 5;
-        final var request = new PlaceBetRequest("EVT", 44, new BigDecimal("10.00"));
+        final var request = new PlaceBetCommand("EVT", 44, new BigDecimal("10.00"));
 
         final var driverMarket1 = new DriverMarket(new Driver(44, "Lewis Hamilton", "Mercedes"), 5);
         final var driverMarket2 = new DriverMarket(new Driver(44, "Lewis Hamilton", "Mercedes"), 7);
@@ -178,7 +177,7 @@ class BetsPlacementServiceTest {
     void shouldDebitAndPersistAccountBeforeSavingBet() {
         // given
         final int userId = 9;
-        final var request = new PlaceBetRequest("EVT", 44, new BigDecimal("10.00"));
+        final var request = new PlaceBetCommand("EVT", 44, new BigDecimal("10.00"));
 
         final var driver = new Driver(44, "N", "T");
         final var driverMarket = new DriverMarket(driver, 3);

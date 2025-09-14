@@ -3,6 +3,7 @@ package com.radoslawzorawicz.bettingapi.api.web.bets;
 import com.radoslawzorawicz.bettingapi.application.bets.BetsApplicationService;
 import com.radoslawzorawicz.bettingapi.domain.bets.Bet;
 import com.radoslawzorawicz.bettingapi.domain.bets.BetPlacementError;
+import com.radoslawzorawicz.bettingapi.domain.bets.PlaceBetCommand;
 import com.radoslawzorawicz.bettingapi.domain.shared.Money;
 import io.vavr.control.Either;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,7 +72,7 @@ class BetsControllerTest {
     @Test
     void shouldCreateBetOnSuccess() {
         // given
-        given(betsService.placeBet(eq(7), any(PlaceBetRequest.class))).willReturn(Either.right(99));
+        given(betsService.placeBet(eq(7), any(PlaceBetCommand.class))).willReturn(Either.right(99));
 
         // expect
         given()
@@ -104,7 +105,7 @@ class BetsControllerTest {
     @MethodSource("errorToStatusCases")
     void shouldMapErrorsToStatuses(BetPlacementError error, int expectedStatus) {
         // given
-        given(betsService.placeBet(eq(7), any(PlaceBetRequest.class))).willReturn(Either.left(error));
+        given(betsService.placeBet(eq(7), any(PlaceBetCommand.class))).willReturn(Either.left(error));
         final String payload = """
                 {
                   "eventId": "E1",

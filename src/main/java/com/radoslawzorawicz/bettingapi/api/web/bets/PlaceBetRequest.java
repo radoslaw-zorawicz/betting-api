@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
-public record PlaceBetRequest(
+record PlaceBetRequest(
         @NotBlank
         String eventId,
 
