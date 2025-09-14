@@ -3,6 +3,8 @@ spring:
     name: betting
   jackson:
     property-naming-strategy: SNAKE_CASE
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.sql
   http:
     client:
       factory: jetty
