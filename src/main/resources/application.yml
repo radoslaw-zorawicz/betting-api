@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: betting
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  http:
+    client:
+      factory: jetty
+      connect-timeout: 2s
+      read-timeout: 5s
+      redirects: follow
